@@ -1,87 +1,94 @@
 import numpy as np
 
 class Grafo:
-    #Inizializza grafo
+    #Costruttore del grafo
     def __init__(self, grafoDict=None, orientato=True):
         self.grafoDict = grafoDict or {}
         self.orientato = orientato
-        self.numero = 0
+        self.CostoFinale = 0
         if not orientato:
             self.conversioneNonOrientato()
             
-    #Converte un grafo orientato in non orientato
+    #Se il grafo è orientato viene convertito in non orientato con questo metodo
     def conversioneNonOrientato(self):
         for a in list(self.grafoDict.keys()):
             for (b, dist) in self.grafoDict[a].items():
                 self.grafoDict.setdefault(b, {})[a] = dist
+
                 
-    #Aggiunge un collegamento tra nodo A e B con un relativo peso, nel caso di grafo non orientato, aggiunge un ulteriore
-    #collegamente da nodo B a nodo A
+    #Crea un arco con relativo peso tra il nodo A e il nodo B, in caso il grafo sia non orientato lo crea in entrambe le direzioni
     def connessione(self, A, B, distanza=1):
         self.grafoDict.setdefault(A, {})[B] = distanza
+        
         if not self.orientato:
             self.grafoDict.setdefault(B, {})[A] = distanza
+ 
             
-    #Prende i nodi adiacenti
+    #Restituisce i nodi adiacenti
     def get(self, a, b=None):
         links = self.grafoDict.setdefault(a, {})
         if b is None:
             return links
         else:
             return links.get(b)
+ 
         
-    #Restituisce lista di nodi
+    #Restituisce lista di tutti i nodi
     def nodi(self):
         s1 = set([k for k in self.grafoDict.keys()])
         s2 = set([k2 for v in self.grafoDict.values() for k2, v2 in v.items()])
         nodi = s1.union(s2)
         return list(nodi)
     
-    #Rimuove dal grafo una regione (nodo)
-    def rimuovi(self, listaRegioni, nomeRegione):
+    #Rimuove dal grafo una Nazione (nodo)
+    def rimuovi(self, listaRegioni, nomeNazione):
         for i in range (len(listaRegioni)):
-            if(self.grafoDict[listaRegioni[i].name].get(nomeRegione) != None):
-               self.grafoDict[listaRegioni[i].name].pop(nomeRegione)
-        self.grafoDict.pop(nomeRegione)
+            if(self.grafoDict[listaRegioni[i].name].get(nomeNazione) != None):
+               self.grafoDict[listaRegioni[i].name].pop(nomeNazione)
+        self.grafoDict.pop(nomeNazione)
     
-    def PrezzoFinale(self, numero):
-        self.numero = numero
+    
+    #Avvalora l'attributo costofinale del grafo
+    def PrezzoFinale(self, CostoFinale):
+        self.CostoFinale = CostoFinale
+
+
     
 class Nodo:
-    #Inizializza un nodo
-    def __init__(self, nome:str, genitore:str):
+
+    def __init__(self, nome:str, genitore:str):     #Costruttore del nodo
         self.nome = nome
         self.genitore = genitore
-        #Distanza da nodo iniziale
-        self.g = 0
-        #Distanza da nodo obiettivo
-        self.h = 0
-        #Costo totale delle distanze
-        self.f = 0
-    #Effettua comparazione tra nodi
-    def __eq__(self, other):
+        self.g = 0        #Distanza da nodo iniziale
+        self.h = 0        #Distanza da nodo obiettivo
+        self.f = 0        #Costo totale delle distanze
+        
+    
+    def __eq__(self, other):    #Effettua comparazione tra nodi
         return self.nome == other.nome
-    #Ordina i nodi in base al costo
-    def __lt__(self, other):
+    
+    
+    def __lt__(self, other):    #Ordina i nodi in base al costo
          return self.f < other.f
-    #Stampa i nodi
-    def __repr__(self):
+     
+
+    def __repr__(self):         #Stampa i nodi
         return ('({0},{1})'.format(self.nome, self.f))
 
 
-class Regione:
-    # Initialize the class
-    def __init__(self, name: str):
+class Nazione:
+            
+    def __init__(self, name: str):  #costruttore di nazione
         self.name = name
         self.tasse = ImponiTasse()
 
 
 
-#Genera casualmente un numero che poi sara la % delle tasse
+#Genera casualmente un numero che rappresenta quella che sarà la % delle tasse
 def ImponiTasse():
-    numeroCasuale = np.random.randint(50)
+    RandomNumber = np.random.randint(50)
 
-    return numeroCasuale
+    return RandomNumber
 
 
 
@@ -98,12 +105,13 @@ def calcoloEuristica (partenza, target):
 
     return euristica
 
-#Serve per trovare il percorso da una regione A ad una regione B nel grafo
-#Restituisce un vettore che mantiene tutte le euristiche per le regioni che ci sono in mezzo tra A e B
-def vettoreEuristiche (regione:Regione, lista):
+
+
+#Restituisce un vettore contenente tutte le euristiche per le nazioni che sono presenti tra A e B
+def vettoreEuristiche (Nazione:Nazione, lista):
     euristiche = {}
     for i in range (len(lista)):
-            euristiche[lista[i].name] = calcoloEuristica(regione.tasse, lista[i].tasse)
+            euristiche[lista[i].name] = calcoloEuristica(Nazione.tasse, lista[i].tasse)
     return euristiche
 
 #Verifica che un nodo adiacente sia stato inserito nella lista dei nodi aperti
@@ -115,8 +123,8 @@ def verificaAggiuntaNeighbour(open, neighbour):
 
 
 
-#Ricerca A*
-def ricercaAStar(prezzoiniziale ,grafo, euristiche, partenza: Regione, arrivo: Regione):
+#Algoritmo di ricerca A*
+def ricercaAStar(prezzoiniziale ,grafo, euristiche, partenza: Nazione, arrivo: Nazione):
 
     open = []
     closed = []
@@ -154,43 +162,43 @@ def ricercaAStar(prezzoiniziale ,grafo, euristiche, partenza: Regione, arrivo: R
     return None
 
 lista = []
-Turchia = Regione("Turchia")
+Turchia = Nazione("Turchia")
 lista.append(Turchia)
-Italia = Regione("Italia")
+Italia = Nazione("Italia")
 lista.append(Italia)
-Inghilterra = Regione("Inghilterra")
+Inghilterra = Nazione("Inghilterra")
 lista.append(Inghilterra)
-Egitto = Regione("Egitto")
+Egitto = Nazione("Egitto")
 lista.append(Egitto)
-EmiratiArabiUniti = Regione("EmiratiArabiUniti")
+EmiratiArabiUniti = Nazione("EmiratiArabiUniti")
 lista.append(EmiratiArabiUniti)
-Singapore = Regione("Singapore")
+Singapore = Nazione("Singapore")
 lista.append(Singapore)
-SudAfrica = Regione("SudAfrica")
+SudAfrica = Nazione("SudAfrica")
 lista.append(SudAfrica)
-Argentina = Regione("Argentina")
+Argentina = Nazione("Argentina")
 lista.append(Argentina)
-Panama = Regione("Panama")
+Panama = Nazione("Panama")
 lista.append(Panama)
-Cuba = Regione("Cuba")
+Cuba = Nazione("Cuba")
 lista.append(Cuba)
-Alaska = Regione("Alaska")
+Alaska = Nazione("Alaska")
 lista.append(Alaska)
-Taiwan = Regione("Taiwan")
+Taiwan = Nazione("Taiwan")
 lista.append(Taiwan) 
-Indonesia = Regione("Indonesia")
+Indonesia = Nazione("Indonesia")
 lista.append(Indonesia)
-NuovaGuinea = Regione("NuovaGuinea")
+NuovaGuinea = Nazione("NuovaGuinea")
 lista.append(NuovaGuinea)
-CoreaDelSud = Regione("CoreaDelSud")
+CoreaDelSud = Nazione("CoreaDelSud")
 lista.append(CoreaDelSud)
-Giappone = Regione("Giappone")
+Giappone = Nazione("Giappone")
 lista.append(Giappone)
-NewYork = Regione("NewYork")
+NewYork = Nazione("NewYork")
 lista.append(NewYork)
-Washington = Regione("Washington")
+Washington = Nazione("Washington")
 lista.append(Washington)
-Danimarca = Regione("Danimarca")
+Danimarca = Nazione("Danimarca")
 lista.append(Danimarca)
 
 #Genera il grafo con le relative connessioni pesate tra i nodi
@@ -239,25 +247,25 @@ def generaGrafo():
 
     return grafo
 
-#Trova percorso da nodo A a nodo B
+#Metodo che trova e stampa il percorso tra A e B, e il costo del prodotto tassato
 def trovaPercorso(prezzoiniziale,partenza, arrivo):
-    regionePartenza = None
-    regioneArrivo = None
+    NazionePartenza = None
+    NazioneArrivo = None
     for i in range(len(lista)):
         if lista[i].name.lower() == partenza.lower():
-            regionePartenza = lista[i]
+            NazionePartenza = lista[i]
         if lista[i].name.lower() == arrivo.lower():
-            regioneArrivo = lista[i]
+            NazioneArrivo = lista[i]
 
-    if (regionePartenza == None or regioneArrivo == None):
+    if (NazionePartenza == None or NazioneArrivo == None):
         print("Inserimento errato!")
         return
     grafo = generaGrafo()
 
-    euristiche = vettoreEuristiche(regioneArrivo, lista)
+    euristiche = vettoreEuristiche(NazioneArrivo, lista)
 
-    percorso = ricercaAStar(prezzoiniziale ,grafo, euristiche, regionePartenza, regioneArrivo)
+    percorso = ricercaAStar(prezzoiniziale ,grafo, euristiche, NazionePartenza, NazioneArrivo)
     print("Prezzo del prodotto tassato: ")
-    print(grafo.numero)
+    print(grafo.CostoFinale)
     print("\nIl prodotto farà questo percorso per arrivare a destinazione : ")
     print(percorso)
