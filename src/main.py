@@ -9,6 +9,8 @@ import joblib
 import numpy as np
 from expert_system import start_exsys
 import Grafo as grf
+from constraint import *
+from CspConsulente import CspConsulente
 
 def soil_classifier():
     
@@ -18,10 +20,19 @@ def soil_classifier():
     
    
     #WELCOME MEX
-    print("Benvenuto nel sistema di classificazione del suolo di Inomae!\n")
-    
+    print("Benvenuto nel sistema di classificazione del suolo di Ninomae!\n")
     
 
+    #Blocco per il csp
+    c = CspConsulente()         #Crea il csp
+    n = c.getTurniDisponibili() #variabile a cui assegno il numero di turni max, e nel farlo gli visualizza
+    turno = int(input("Digita il numero del turno corrispondente al giorno e orario in cui vuole la consulenza:\n"))
+    while turno > n or turno < 0:
+        turno = int(input("E stato inserito un numero non valido, riprova:\n"))
+
+    c.printTurnoScelto(turno)       #visualizza la scelta fatta dall'utente
+
+    
     #INSERT CLIMATIC DATA
     print("Inserirsci i dati climatici:\n")
     temperature = input("Temperatura (media, in gradi Celsius): \n")
@@ -43,7 +54,7 @@ def soil_classifier():
     soil_type = classifier.predict(x)
     print("Il terreno è adatto alle colture di ", (np.array2string(soil_type)).upper())
     
-    #schtella
+    #Blocco dell'A* 
     print("E interessato a sapere il percorso che fara il prodotto se lo acquista dall'estero e il suo prezzo finale? \n")
     print("O è più interessato al tempo che servirà per spedirlo?\n")
     
@@ -61,8 +72,7 @@ def soil_classifier():
     if preferenza == "2":
         grf.trovaPercorso(0,destinatario, provenienza, preferenza)  
         
-    # grf.trovaPercorso(10,"italia", "giappone", "1")  # per provare velocemente l'A*, commenta la parte sopra fino a benvenuto
-    #, e lascia questa riga di codice e cambia l'ultimo argomento per scegliere tra tempo e prezzo
+    # grf.trovaPercorso(10,"italia", "giappone", "1")  #Riga di test rapido per l'A*
     
 #90,42,43,20.87974371,82.00274423,6.502985292000001,202.9355362,
 #85,58,41,21.77046169,80.31964408,7.038096361,226.6555374
