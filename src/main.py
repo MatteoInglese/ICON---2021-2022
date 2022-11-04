@@ -13,10 +13,11 @@ print("\nMatteo Inglese 123456789,\n"
       "Fabio Abbondanza 123456789\n")
 while(True):
     print("Menu di navigazione, digita un numero per accedere a un blocco:\n\n")
-    print("[1] Classificatore del terreno\n")
-    print("[2] Sistema esperto per malattie del caffe\n")
-    print("[3] Ricerca percorso spedizione\n")
-    print("[4] CSP\n")
+    print("[1] Classificatore del terreno")
+    print("[2] Sistema esperto per malattie del caffe")
+    print("[3] Ricerca percorso spedizione")
+    print("[4] CSP")
+    print("\n[0] Esci")
 
     choise = input("==> ")
     ch = float(choise)
@@ -29,5 +30,7 @@ while(True):
             graph_search()
         case 4:
             CSP_turnation()
+        case 0:
+            quit()
         case _:
             print("Input non valido!")
