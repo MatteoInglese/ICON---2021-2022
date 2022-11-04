@@ -43,7 +43,7 @@ class DisDetectionEngine(KnowledgeEngine):
 
     @Rule(AND(OR(Fact(is_rainy=True), Fact(is_rain_season=True)), OR(Fact(is_warm=True), Fact(is_drought=True)), Fact(is_humid=True)))
     def has_atm_cond_presence(self):
-        self.declare(atm_cond_presence=True)
+        self.declare(Fact(atm_cond_presence=True))
 
 
     #PRESENCE OF DISEASE SYMPTOM ON LEAFS
@@ -67,7 +67,7 @@ class DisDetectionEngine(KnowledgeEngine):
 
     @Rule(AND(Fact(basic_rust=True), Fact(has_pustules=True), Fact(has_back_leaf_symptom=True)))
     def leaf_rust(self):
-        self.declare(has_leaf_rust=True)
+        self.declare(Fact(has_leaf_rust=True))
 
 
     #BROWN EYE SPOT DISEASE

@@ -33,7 +33,7 @@ def soil_classifier():
     soil_type = classifier.predict(x)
     print("Il terreno è adatto alle colture di ", (np.array2string(soil_type)).upper())
 
-def graph_serach():
+def graph_search():
     print(
         "E interessato a sapere il percorso che fara il prodotto se lo acquista dall'estero e il suo prezzo finale? \n")
     print("O è più interessato al tempo che servirà per spedirlo?\n")
