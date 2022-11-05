@@ -368,6 +368,13 @@ def generaGrafoTempo():
 
     return grafo
 
+def mostraScali():
+    print("Nazioni attualmente disponibili:\n\n| Alaska, Argentina, Cuba, Danimarca,\n")
+    print("| Coreadelsud, EmiratiArabiUniti, Egitto, Giappone,\n")
+    print("| Inghilterra, Indonesia, Italia, NewYork,\n")
+    print("| NuovaGuinea, Panama, Singapore, SudAfrica,\n")
+    print("| Taiwan, Turchia, Washington.\n\n")
+
 #Metodo che trova e stampa il percorso tra A e B, e il costo del prodotto tassato
 def trovaPercorso(prezzoiniziale,partenza, arrivo, preferenza):
     NazionePartenza = None

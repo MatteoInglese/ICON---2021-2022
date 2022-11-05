@@ -41,7 +41,9 @@ def graph_search():
     preferenza = input("inserisci 1 per il prezzo, o 2 per il tempo\n")
     while preferenza != "1" and preferenza != "2":
         preferenza = input("Hai sbagliato, inserisci 1 per il prezzo, o 2 per il tempo\n")
-
+        
+    grf.mostraScali()
+    
     destinatario = input("Inserisci la nazione in cui verra consegnato (es. Italia): \n")
     provenienza = input("Inserisci la nazione di provenienza (es. Giappone): \n")
 
@@ -52,8 +54,6 @@ def graph_search():
         grf.trovaPercorso(prezzoiniziale, destinatario, provenienza, preferenza)
     if preferenza == "2":
         grf.trovaPercorso(0, destinatario, provenienza, preferenza)
-
-        # grf.trovaPercorso(10,"italia", "giappone", "1")  #Riga di test rapido per l'A*
 
 def CSP_turnation():
     # Blocco per il csp
