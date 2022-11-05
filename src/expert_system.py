@@ -26,24 +26,20 @@ class DisDetectionEngine(KnowledgeEngine):
         self.declare(Fact(is_rainy=ask("Ci sono state piogge abbondanti e frequenti nelle ultime settimane?")))
 
     @Rule(Fact(asking=True))
-    def ask_rain_season(self):
-        self.declare(Fact(is_rain_season=ask("Sei nella stagione delle piogge?")))
-
-    @Rule(Fact(asking=True))
-    def ask_temperature(self):
-        self.declare(Fact(is_warm=ask("Le temperature sono particolarmente calde per il periodo dell'anno?")))
-
-    @Rule(Fact(asking=True))
     def ask_drought(self):
         self.declare(Fact(is_drought=ask("Si sono verificati episodi di siccità nelle ultime settimane?")))
 
     @Rule(Fact(asking=True))
-    def asj_humidity(self):
+    def ask_humidity(self):
         self.declare(Fact(is_humid=ask("C'é stata molta umidità nelle ultime settimane?")))
 
-    @Rule(AND(OR(Fact(is_rainy=True), Fact(is_rain_season=True)), OR(Fact(is_warm=True), Fact(is_drought=True)), Fact(is_humid=True)))
+    @Rule(AND(Fact(is_rainy=True), Fact(is_drought=True), Fact(is_humid=True)))
     def has_atm_cond_presence(self):
         self.declare(Fact(atm_cond_presence=True))
+
+    @Rule(OR(Fact(is_rainy=False), Fact(is_drought=False), Fact(is_humid=False)))
+    def has_not_atm_cond_presence(self):
+        self.declare(Fact(atm_cond_presence=False))
 
 
     #PRESENCE OF DISEASE SYMPTOM ON LEAFS
@@ -51,11 +47,28 @@ class DisDetectionEngine(KnowledgeEngine):
     def ask_basic_symp_leaf(self):
         self.declare(Fact(basic_symp_leaf=ask("Le foglie presentano macchie di qualche tipo?")))
 
+    @Rule(AND(Fact(atm_cond_presence=True), Fact(basic_symp_leaf=True)))
+    def has_basic(self):
+        self.declare(Fact(has_basic=True))
+
+    @Rule(OR(Fact(atm_cond_presence=False), Fact(basic_symp_leaf=False)))
+    def has_not_basic(self):
+        self.declare(Fact(has_basic=False))
+
+    @Rule(Fact(has_basic=False))
+    def no_diseases(self):
+        self.declare(Fact(has_leaf_rust=False))
+        self.declare(Fact(has_brown_eye_disease=False))
+        self.declare(Fact(has_black_rot=False))
 
     #COFFEE LEAF RUST
-    @Rule(AND(Fact(atm_cond_presence=True), Fact(basic_symp_leaf=True)))
+    @Rule(Fact(has_basic=True))
     def ask_basic_rust(self):
         self.declare(Fact(basic_rust=ask("Le macchie sono di colore giallo/arancione?")))
+
+    @Rule(Fact(has_basic=False))
+    def no_rust(self):
+        self.declare(Fact(has_leaf_rust=False))
 
     @Rule(Fact(basic_rust=True))
     def ask_pustules(self):
@@ -69,15 +82,23 @@ class DisDetectionEngine(KnowledgeEngine):
     def leaf_rust(self):
         self.declare(Fact(has_leaf_rust=True))
 
+    @Rule(OR(Fact(basic_rust=False), Fact(has_pustules=False), Fact(has_back_leaf_symptom=False)))
+    def not_leaf_rust(self):
+        self.declare(Fact(has_leaf_rust=False))
+
 
     #BROWN EYE SPOT DISEASE
-    @Rule(AND(Fact(atm_cond_presence=True), Fact(basic_symp_leaf=True), Fact(has_leaf_rust=False)))
+    @Rule(AND(Fact(has_basic=True), Fact(has_leaf_rust=False)))
     def ask_basic_brown(self):
         self.declare(Fact(has_basic_brown=ask("Le macchie sono di colore marrone all'esterno e grigie all'interno?")))
 
     @Rule(Fact(has_basic_brown=True))
     def ask_eye_symptom(self):
         self.declare(Fact(has_eye_symptom=ask("Hanno una forma che ricorda un occhio?")))
+
+    @Rule(Fact(has_basic_brown=False))
+    def no_eye_symptom(self):
+        self.declare(Fact(has_brown_eye_disease=False))
 
     @Rule(Fact(has_basic_brown=True))
     def ask_defoliate(self):
@@ -87,9 +108,13 @@ class DisDetectionEngine(KnowledgeEngine):
     def brown_eye_disease(self):
         self.declare(Fact(has_brown_eye_disease=True))
 
+    @Rule(OR(Fact(has_eye_symptom=False), Fact(has_defoliation=False)))
+    def not_brown_eye_disease(self):
+        self.declare(Fact(has_brown_eye_disease=False))
+
 
     #BLACK ROT
-    @Rule(AND(Fact(atm_cond_presence=True), Fact(basic_symp_leaf=True), Fact(has_leaf_rust=False), Fact(has_brown_eye_disease=False)))
+    @Rule(AND(Fact(has_basic=True), Fact(has_leaf_rust=False), Fact(has_brown_eye_disease=False)))
     def ask_basic_black(self):
         self.declare(Fact(has_basic_black=ask("Le foglie sono di colore marrone scuro o nere per la maggior parte della loro superficie?")))
 
@@ -101,24 +126,33 @@ class DisDetectionEngine(KnowledgeEngine):
     def black_rot(self):
         self.declare(Fact(has_black_rot=True))
 
+    @Rule(Fact(has_leaves_and_berry_drops=False))
+    def not_black_rot(self):
+        self.declare(Fact(has_black_rot=False))
+
 
     #DISPLAYING RESULTS
-    @Rule(Fact(atm_cond_presence=True))
-    def print_atm(self):
-        print("Le condizioni atmosferiche favoriscono l'insorgere di malattie foliari.")
+    @Rule(AND(Fact(has_leaf_rust=False),Fact(has_brown_eye_disease=False),Fact(has_black_rot=False), Fact(has_basic=True)))
+    def print_basic(self):
+        print("E' possibile che siano presenti malattie foliari sconosciute.")
+        self.reset()
+
+    @Rule(AND(Fact(has_leaf_rust=False), Fact(has_brown_eye_disease=False), Fact(has_black_rot=False)))
+    def print_no_basic(self):
+        print("Le condizioni non sono compatibili con le malattie foliari.")
+        self.reset()
 
     @Rule(Fact(has_leaf_rust=True))
     def print_rust(self):
         print("Rilevata presenza della ruggine foliare del caffé.")
+        self.reset()
 
     @Rule(Fact(has_brown_eye_disease=True))
     def print_brown_eye(self):
         print("Rilevata presenza della malattia dell'occhio marrone.")
+        self.reset()
 
     @Rule(Fact(has_black_rot=True))
     def print_black_rot(self):
         print("Rilevata presenza di marciume foliare.")
-
-    @Rule(AND(Fact(has_leaf_rust=False),Fact(has_brown_eye_disease=False),Fact(has_black_rot=False)))
-    def print_no_diseases(self):
-        print("Non è stata rilevata alcuna malattia foliare.")
+        self.reset()
