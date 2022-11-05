@@ -9,17 +9,17 @@ from expert_system import start_exsys
 
 #NAV MENU
 print("*====== PROGETTO ICON 2021/2022 ======*\n")
-print("\nMatteo Inglese 123456789,\n"
+print("Matteo Inglese 123456789,\n"
       "Fabio Abbondanza 123456789\n")
 while(True):
-    print("Menu di navigazione, digita un numero per accedere a un blocco:\n\n")
+    print("\nMenu di navigazione, digita un numero per accedere a un blocco del progetto:\n\n")
     print("[1] Classificatore del terreno")
     print("[2] Sistema esperto per malattie del caffe")
     print("[3] Ricerca percorso spedizione")
-    print("[4] CSP")
+    print("[4] Generatore di turni per la consulenza")
     print("\n[0] Esci")
 
-    choise = input("==> ")
+    choise = input("\n==> ")
     ch = float(choise)
     match ch:
         case 1:

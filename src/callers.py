@@ -5,6 +5,7 @@ from expert_system import start_exsys
 import Grafo as grf
 from constraint import *
 from CspConsulente import CspConsulente
+from question_system import ask
 
 
 def soil_classifier():
@@ -12,51 +13,67 @@ def soil_classifier():
     classifier = joblib.load("../models/dt.sav")
 
     # WELCOME MEX
-    print("Benvenuto nel sistema di classificazione del suolo di Ninomae!\n")
+    print("\n\n==========                                                         ==========\n")
+    print("******     MINISTERO DELL'AGICOLTURA E DELLA SOVRANITA' ALIMENTARE     ******\n")
+    print("==========                                                         ==========\n")
 
-    # INSERT CLIMATIC DATA
-    print("Inserirsci i dati climatici:\n")
-    temperature = input("Temperatura (media, in gradi Celsius): \n")
-    humidity = input("Umidità: \n")
-    rainfall = input("Precipitazioni (annuali, in mm): \n")
+    print("Sistema di classificazione del terreno.")
+    print("Assicurati di avere a disposizione le analisi climatiche e del terreno!")
 
-    # INSERT SOIL DATA
-    print("Inserirsci i risultati delle analisi del terreno:\n")
-    n = input("Percentuale di Azoto: \n")
-    p = input("Percentuale di Fosforo: \n")
-    k = input("Percentuale di Potassio: \n")
-    ph = input("Ph: \n")
+    choice = True
+    while(choice == True):
+        # INSERT CLIMATIC DATA
+        print("\nInserirsci i dati climatici")
+        temperature = input("Temperatura (media, in gradi Celsius): ")
+        humidity = input("Umidità: ")
+        rainfall = input("Precipitazioni (annuali, in mm): \n")
 
-    # CLASSIFY THE SOIL
-    tmp = [n, p, k, temperature, humidity, ph, rainfall]
-    x = (np.array(tmp)).reshape(1, -1)
-    soil_type = classifier.predict(x)
-    print("Il terreno è adatto alle colture di ", (np.array2string(soil_type)).upper())
+        # INSERT SOIL DATA
+        print("Inserirsci i risultati delle analisi del terreno")
+        n = input("Percentuale di Azoto: ")
+        p = input("Percentuale di Fosforo: ")
+        k = input("Percentuale di Potassio: ")
+        ph = input("Ph: \n")
+
+        # CLASSIFY THE SOIL
+        tmp = [n, p, k, temperature, humidity, ph, rainfall]
+        x = (np.array(tmp)).reshape(1, -1)
+        soil_type = classifier.predict(x)
+        print("Il terreno è adatto alle colture di ", (np.array2string(soil_type)).upper())
+        choice = ask("\nVuoi eseguire un'altra analisi?")
 
 def graph_search():
-    print(
-        "E interessato a sapere il percorso che fara il prodotto se lo acquista dall'estero e il suo prezzo finale? \n")
-    print("O è più interessato al tempo che servirà per spedirlo?\n")
+    print("\n\n<<<<<<<< ARASAKA EXPEDITION >>>>>>>>")
 
-    preferenza = input("inserisci 1 per il prezzo, o 2 per il tempo\n")
-    while preferenza != "1" and preferenza != "2":
-        preferenza = input("Hai sbagliato, inserisci 1 per il prezzo, o 2 per il tempo\n")
-        
-    grf.mostraScali()
-    
-    destinatario = input("Inserisci la nazione in cui verra consegnato (es. Italia): \n")
-    provenienza = input("Inserisci la nazione di provenienza (es. Giappone): \n")
+    print("\nBenvenuto nel sistema logistico dell'Arasaka!")
 
-    if preferenza == "1":
-        prezzoiniziale = input(
-            "Inserisci il prezzo con cui il prodotto viene acquistato nella nazione di provenienza: \n")
-        prezzoiniziale = int(prezzoiniziale)
-        grf.trovaPercorso(prezzoiniziale, destinatario, provenienza, preferenza)
-    if preferenza == "2":
-        grf.trovaPercorso(0, destinatario, provenienza, preferenza)
+    choice = True
+    while (choice == True):
+        print("Seleziona il criterio da usare nel calcolo del percorso ottimale per la tua spedizione:\n")
+
+        print("[1] Costo della spedizione")
+        print("[2] Tempi di consegna")
+
+        preferenza = input("\n==>")
+        while preferenza != "1" and preferenza != "2":
+            preferenza = input("Input non valido.")
+
+        grf.mostraScali()
+
+        destinatario = input("Inserisci lo scalo di partenza (es. Italia): \n")
+        provenienza = input("Inserisci lo scalo di arrivo (es. Giappone): \n")
+
+        if preferenza == "1":
+            prezzoiniziale = input(
+                "Inserisci il prezzo con cui il prodotto viene acquistato nella nazione di provenienza: \n")
+            prezzoiniziale = int(prezzoiniziale)
+            grf.trovaPercorso(prezzoiniziale, destinatario, provenienza, preferenza)
+        if preferenza == "2":
+            grf.trovaPercorso(0, destinatario, provenienza, preferenza)
+
+        choice = ask("\nVuoi calcolare un'altra spedizione?")
 
 def CSP_turnation():
-    # Blocco per il csp
     c = CspConsulente()  # Crea il csp
     n = c.getTurniDisponibili()  # variabile a cui assegno il numero di turni max, e nel farlo gli visualizza
     turno = int(input("Digita il numero del turno corrispondente al giorno e orario in cui vuole la consulenza:\n"))
