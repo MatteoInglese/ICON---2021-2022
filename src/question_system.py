@@ -1,10 +1,4 @@
 # -*- coding: utf-8 -*-
-"""
-Created on Sat Sep 17 11:06:41 2022
-
-@author: lncln
-"""
-
 def ask(qst: str) -> bool:
     ans = input(qst + " (y/n): ")
     ans = ans.lower()

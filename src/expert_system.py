@@ -1,10 +1,4 @@
 # -*- coding: utf-8 -*-
-"""
-Created on Sat Sep 17 10:06:12 2022
-
-@author: lncln
-"""
-
 from experta import *
 from question_system import ask
 

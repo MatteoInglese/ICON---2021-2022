@@ -1,9 +1,4 @@
 # -*- coding: utf-8 -*-
-"""
-Created on Tue Nov  1 15:36:53 2022
-
-@author: fabix
-"""
 from constraint import *
 
 
