@@ -6,6 +6,7 @@ import Grafo as grf
 from constraint import *
 from CspConsulente import CspConsulente
 from question_system import ask
+from expert_system import start_exsys
 
 
 def soil_classifier():
@@ -42,6 +43,14 @@ def soil_classifier():
         print("Il terreno è adatto alle colture di ", (np.array2string(soil_type)).upper())
         choice = ask("\nVuoi eseguire un'altra analisi?")
 
+def exsys():
+    print("<=== SISTEMA DI DIAGNOSI MALATTIE FOGLIARI ===>")
+
+    choice = True
+    while (choice == True):
+        start_exsys()
+        choice = ask("\nVuoi eseguire un'altra diagnosi?")
+
 def graph_search():
     print("\n\n<<<<<<<< ARASAKA EXPEDITION >>>>>>>>")
 
@@ -74,6 +83,12 @@ def graph_search():
         choice = ask("\nVuoi calcolare un'altra spedizione?")
 
 def CSP_turnation():
+    print("\n\n==========                                                         ==========\n")
+    print("******     MINISTERO DELL'AGICOLTURA E DELLA SOVRANITA' ALIMENTARE     ******\n")
+    print("==========                                                         ==========\n")
+
+    print("SISTEMA DI TURNAZIONE PER LE CONSULENZE E LE ANALISI\n")
+
     c = CspConsulente()  # Crea il csp
     n = c.getTurniDisponibili()  # variabile a cui assegno il numero di turni max, e nel farlo gli visualizza
     turno = int(input("Digita il numero del turno corrispondente al giorno e orario in cui vuole la consulenza:\n"))

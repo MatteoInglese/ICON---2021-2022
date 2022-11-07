@@ -134,25 +134,25 @@ class DisDetectionEngine(KnowledgeEngine):
     #DISPLAYING RESULTS
     @Rule(AND(Fact(has_leaf_rust=False),Fact(has_brown_eye_disease=False),Fact(has_black_rot=False), Fact(has_basic=True)))
     def print_basic(self):
-        print("E' possibile che siano presenti malattie foliari sconosciute.")
+        print("E' possibile che siano presenti malattie fogliari sconosciute.")
         self.reset()
 
     @Rule(AND(Fact(has_leaf_rust=False), Fact(has_brown_eye_disease=False), Fact(has_black_rot=False)))
     def print_no_basic(self):
-        print("Le condizioni non sono compatibili con le malattie foliari.")
+        print("Le condizioni non sono compatibili con le malattie fogliari.")
         self.reset()
 
     @Rule(Fact(has_leaf_rust=True))
     def print_rust(self):
-        print("Rilevata presenza della ruggine foliare del caffé.")
+        print("Possibile presenza della ruggine foliare del caffé.")
         self.reset()
 
     @Rule(Fact(has_brown_eye_disease=True))
     def print_brown_eye(self):
-        print("Rilevata presenza della malattia dell'occhio marrone.")
+        print("Possibile presenza della malattia dell'occhio marrone.")
         self.reset()
 
     @Rule(Fact(has_black_rot=True))
     def print_black_rot(self):
-        print("Rilevata presenza di marciume foliare.")
+        print("Possibile presenza di marciume foliare.")
         self.reset()

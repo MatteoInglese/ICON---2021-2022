@@ -5,12 +5,11 @@ Created on Sat Sep 17 11:07:21 2022
 @author: lncln
 """
 from callers import *
-from expert_system import start_exsys
 
 #NAV MENU
 print("*====== PROGETTO ICON 2021/2022 ======*\n")
-print("Matteo Inglese 123456789,\n"
-      "Fabio Abbondanza 123456789\n")
+print("Matteo Inglese 723032,\n"
+      "Fabio Abbondanza 718937\n")
 while(True):
     print("\nMenu di navigazione, digita un numero per accedere a un blocco del progetto:\n\n")
     print("[1] Classificatore del terreno")
@@ -25,7 +24,7 @@ while(True):
         case 1:
             soil_classifier()
         case 2:
-            start_exsys()
+            exsys()
         case 3:
             graph_search()
         case 4:
