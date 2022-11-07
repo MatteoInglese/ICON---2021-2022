@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from constraint import *
-
+import numpy as np
 
 class CspConsulente():
 
@@ -17,9 +17,11 @@ class CspConsulente():
         self.consulente.addVariable("Orario",["mattina","pomeriggio"])
         self.consulente.addVariable("Auto",["si","no"])
         
-        self.consulente.addConstraint(lambda giorni, disponibilitaStrumenti: giorni >=3 and giorni <=28 if disponibilitaStrumenti == "Disponibile" else None,["giorni","disponibilitaStrumenti"])
-        self.consulente.addConstraint(lambda giorni, Orario: giorni == 21 if Orario == "mattina" else giorni >=21 and giorni <=30 if Orario == "pomeriggio" else None,["giorni","Orario"])
-        self.consulente.addConstraint(lambda giorni, Auto: giorni == 21 or giorni ==27 or giorni ==23 if Auto == "si"  else None,["giorni","Auto"])
+        self.n1 = np.random.randint(30)
+        self.n2 = np.random.randint(30)
+        self.consulente.addConstraint(lambda giorni, disponibilitaStrumenti: giorni >=8 and giorni <=28 if disponibilitaStrumenti == "Disponibile" else None,["giorni","disponibilitaStrumenti"])
+        self.consulente.addConstraint(lambda giorni, Orario: giorni >=6 and giorni<= 25  if Orario == "mattina" else giorni >=23 and giorni <=30 if Orario == "pomeriggio" else None,["giorni","Orario"])
+        self.consulente.addConstraint(lambda giorni, Auto: giorni == self.n1 or giorni == self.n2 or giorni ==23 or giorni >= 25 and giorni <=30 if Auto == "si"  else None,["giorni","Auto"])
         
         self.solution = None    #lista delle soluzioni
 
